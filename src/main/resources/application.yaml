@@ -1,0 +1,44 @@
+spring:
+  jpa:
+      show-sql: true
+      hibernate:
+            ddl-auto: none
+            naming:
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  jwt:
+     id: jwt
+  profiles:
+    active: "dev"
+---
+spring:
+  profiles: dev
+  authserver:
+     accessTokenUrl: http://localhost:82/authserver/getaccesstoken/
+     resourceUrl: http://localhost:82/authserver/getcredentials/
+     clientid: microservices
+     clientsecret: microservices@1234
+  env:
+     name: twitterhome_dev
+  threadPool:
+     corePoolSize: 2
+     maxPoolSize: 10
+  activeMQ:
+     serverName: devactivemq
+---
+spring:
+  profiles: prod
+  authserver:
+     accessTokenUrl: http://authserver:8080/authserver/getaccesstoken/
+     resourceUrl: http://authserver:8080/authserver/getcredentials/
+     clientid: microservices
+     clientsecret: microservices@1234
+  env:
+     name: twitterhome_dep
+  threadPool:
+     corePoolSize: 2
+     maxPoolSize: 1000
+  activeMQ:
+     serverName: prodactivemq
