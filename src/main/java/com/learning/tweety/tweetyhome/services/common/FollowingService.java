@@ -24,6 +24,11 @@ public class FollowingService {
 	
 	@Transactional
 	public Following addFollowers(Following following) {
+		Following fetchFollowing = followingRepository.findFollowing(following.getFollowingName(), 
+				following.getUserName());
+		if(fetchFollowing != null) {
+			throw new RuntimeException("Already following.");
+		}
 		Date currentDate = new Date();
 		following.setCreationDate(new java.sql.Date(currentDate.getTime()));
 		Following saveFollowing = followingRepository.save(following);
