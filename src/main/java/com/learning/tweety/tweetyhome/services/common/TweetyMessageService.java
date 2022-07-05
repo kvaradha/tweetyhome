@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.learning.tweety.tweetyhome.repository.Favourite;
 import com.learning.tweety.tweetyhome.repository.Retweet;
@@ -49,8 +50,12 @@ public class TweetyMessageService {
 	 * Delete message based on id.
 	 * @param tweetyID
 	 */
+	@Transactional
 	public void deleteTweetyMessage(Long tweetyID, String userName) {
-		TweetyMessages message = tweetyMessagesRepo.findById(tweetyID).get();
+		TweetyMessages message = tweetyMessagesRepo.findByTweetID(tweetyID, userName);
+		if(message == null) {
+			throw new RuntimeException("Deletion failed. Twitter message not deleted.");
+		}
 		tweetyMessagesRepo.deleteTweet(tweetyID, userName);
 		favouriteService.deleteFavouriteById(tweetyID);
 		retweetService.deleteRetweetById(tweetyID);
@@ -84,7 +89,7 @@ public class TweetyMessageService {
 		TweetyMessages message = tweetyMessagesRepo.findById(tweetyID).get();
 		message.setRetweetCount(message.getRetweetCount() + 1);
 		tweetyMessagesRepo.save(message);
-		retweetService.broadcastRetweetCount(retweet);
+		//retweetService.broadcastRetweetCount(retweet);
 	}
 	
 	public void removeRetweetCount(Retweet retweet) {
@@ -92,7 +97,7 @@ public class TweetyMessageService {
 		TweetyMessages message = tweetyMessagesRepo.findById(tweetyID).get();
 		message.setRetweetCount(message.getRetweetCount() - 1);
 		tweetyMessagesRepo.save(message);
-		retweetService.broadcastDeleteRetweetCount(retweet);
+		//retweetService.broadcastDeleteRetweetCount(retweet);
 	}
 	
 	public void updateFavouriteCount(Favourite favourite) {
@@ -100,7 +105,7 @@ public class TweetyMessageService {
 		TweetyMessages message = tweetyMessagesRepo.findById(tweetyID).get();
 		message.setFavouriteCount(message.getFavouriteCount() + 1);
 		tweetyMessagesRepo.save(message);
-		favouriteService.broadcastFavouriteCount(favourite);
+		//favouriteService.broadcastFavouriteCount(favourite);
 	}
 	
 	public void removeFavouriteCount(Favourite favourite) {
@@ -108,7 +113,7 @@ public class TweetyMessageService {
 		TweetyMessages message = tweetyMessagesRepo.findById(tweetyID).get();
 		message.setFavouriteCount(message.getFavouriteCount() - 1);
 		tweetyMessagesRepo.save(message);
-		favouriteService.broadcastDeleteFavouriteCount(favourite);
+		//favouriteService.broadcastDeleteFavouriteCount(favourite);
 	}
 }
 

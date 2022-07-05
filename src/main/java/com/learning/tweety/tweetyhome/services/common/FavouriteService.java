@@ -38,6 +38,9 @@ public class FavouriteService {
 	
 	public void deleteFavourite(Long tweetyID, String userName) {
 		Favourite favourite = favouriteRepository.findFavourite(tweetyID,userName);
+		if(favourite == null) {
+			throw new RuntimeException("Deletion failed. Invalid tweet id.");
+		}
 		favouriteRepository.deleteFavourite(tweetyID, userName);
 		publisher.sendMessage(ActiveMQConstants.DELETE_FAVOURITE_TOPIC, favourite);
 	}

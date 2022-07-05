@@ -21,9 +21,9 @@ public interface TweetyMessagesRepository extends CrudRepository<TweetyMessages,
 	@Transactional
 	void deleteTweet(Long tweetId, String userName);
 	
-	@Query(value = "select count(*) from twittermessages where twittermessages_id = ?1 "
+	@Query(value = "select * from twittermessages where twittermessages_id = ?1 "
 			+ "and username = ?2", nativeQuery = true)
-	Long findByTweetID(Long tweetyID, String userName);
+	TweetyMessages findByTweetID(Long tweetyID, String userName);
 	
 	@Query(value = "select * from twittermessages where twittermessages_id in (\r\n"
 			+ "(select twittermessages_id from retweet where username = ?1\r\n"

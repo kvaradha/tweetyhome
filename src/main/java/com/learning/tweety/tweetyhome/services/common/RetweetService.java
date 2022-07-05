@@ -39,6 +39,9 @@ public class RetweetService {
 	
 	public void deleteRetweet(Long tweetyID, String userName) {
 		Retweet retweet = retweetRepository.findRetweet(tweetyID, userName);
+		if(retweet == null) {
+			throw new RuntimeException("Deletion failed. Invalid tweet id.");
+		}
 		retweetRepository.deleteRetweet(tweetyID, userName);
 		publisher.sendMessage(ActiveMQConstants.DELETE_RETWEET_TOPIC, retweet);
 	}

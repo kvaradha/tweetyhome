@@ -35,6 +35,9 @@ public class FollowingService {
 	@Transactional
 	public void deleteFollowers(String followingName, String userName) {
 		Following following = followingRepository.findFollowing(followingName, userName);
+		if(following == null) {
+			throw new RuntimeException("Deletion failed. Invalid follower name.");
+		}
 		followingRepository.deleteByFollowersName(followingName, userName);
 		followingAckService.insertPalyload(following, ActiveMQConstants.DELETE_FOLLOWING);
 		publisher.sendMessage(ActiveMQConstants.DELETE_FOLLOWINGS_TOPIC, following);

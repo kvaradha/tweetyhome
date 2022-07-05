@@ -4,12 +4,14 @@ import javax.jms.JMSException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.stereotype.Component;
 
 import com.learning.tweety.tweetyhome.repository.Following;
 import com.learning.tweety.tweetyhome.securityconfig.activemq.ActiveMQConstants;
 import com.learning.tweety.tweetyhome.services.common.FollowingAckService;
 import com.learning.tweety.tweetyhome.services.common.GsonGenerator;
 
+@Component
 public class FollowingAckSubscriber {
 	
 	@Autowired
