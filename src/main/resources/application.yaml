@@ -42,3 +42,18 @@ spring:
      maxPoolSize: 1000
   activeMQ:
      serverName: prodactivemq
+---
+spring:
+  profiles: kubedeployment
+  authserver:
+     accessTokenUrl: http://authserver/authserver/getaccesstoken/
+     resourceUrl: http://authserver/authserver/getcredentials/
+     clientid: microservices
+     clientsecret: microservices@1234
+  env:
+     name: twitterhome_kubedep
+  threadPool:
+     corePoolSize: 2
+     maxPoolSize: 1000
+  activeMQ:
+     serverName: kubeactivemq
