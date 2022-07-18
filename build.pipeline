@@ -1,0 +1,28 @@
+node {
+    
+    stage("Git Checkout") {
+        git branch: 'main', credentialsId: 'GitCreds', url: 'https://github.com/kvaradha/tweetyhome.git'
+    }
+    
+    stage("Build Code") {
+        def mvn_version = 'MavenInstaller'
+        withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
+            sh "mvn clean package  -DskipTests"
+        }
+    }
+    
+    stage("Build Docker Image") {
+        sh "docker build -t karthiv89/tweetyhome:1.0 ."
+    }
+    
+    stage("Push Docker Image") {
+        withCredentials([string(credentialsId: 'DockerCreds', variable: 'dockercreds')]) {
+            sh "docker login -u karthiv89 -p ${dockercreds}"
+        }
+        sh 'docker push karthiv89/tweetyhome:1.0'
+    }
+    
+    stage("Deploy To Kubernetes") {
+        kubernetesDeploy(configs: "kubedeployment.yaml", kubeconfigId: "kubernetes")
+    }
+}
